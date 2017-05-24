@@ -1,0 +1,65 @@
+SHELL=/bin/sh
+
+# The base for the names of the makefile, executable command, etc.
+BASE=  correlation_study
+
+# Put all C++ (or other) source files here.  NO SPACES after continuation \'s.
+SRCS= \
+correlation_study.cpp 
+
+# Put all header files here.  NO SPACES after continuation \'s.
+HDRS= \
+
+# Put any input files you want to be saved in tarballs (e.g., sample files).
+INPFILE= \
+
+OBJS= $(addsuffix .o, $(basename $(SRCS)))
+MAKEFILE= make_$(BASE)
+COMMAND=  $(BASE).x
+TARFILE= $(BASE).tar.gz
+ZIPFILE= $(BASE).zip
+
+CXX= g++
+CFLAGS=  -g -O3
+CWARNS= -Werror -Wall -W -Wshadow -fno-common 
+MOREFLAGS= -Wpedantic -Wpointer-arith -Wcast-qual -Wcast-align \
+           -Wwrite-strings -fshort-enums 
+
+LIBS=           
+LDFLAGS= -lgsl -lgslcblas
+
+all:    $(COMMAND) 
+
+.SUFFIXES:
+.SUFFIXES: .o .mod .f90 .f .cpp
+
+#%.o:   %.mod 
+
+$(COMMAND): $(OBJS) $(MAKEFILE) 
+	$(CXX) -o $(COMMAND) $(OBJS) $(LDFLAGS) $(LIBS)
+
+%.o: %.cpp $(HDRS) $(MAKEFILE)
+	$(CXX) -c $(NOCFLAGS) $(NOCWARNS) -o $@ $<
+
+# Commands to make object (.o) files from Fortran-90 (or beyond) and
+#  Fortran-77 source files (.f90 and .f, respectively).
+.f90.mod:
+	$(F90) -c $(F90FLAGS) -o $@ $< 
+ 
+.f90.o: 
+	$(F90) -c $(F90FLAGS) -o $@ $<
+ 
+.f.o:   
+	$(F90) -c $(FFLAGS) -o $@ $<
+
+clean:
+	/bin/rm -f $(COMMAND) $(OBJS)
+	/bin/rm -f $(MODIR)/*.mod
+  
+tarz:
+	tar cfvz $(TARFILE) $(MAKEFILE) $(SRCS) $(HDRS) $(MODIR) $(INPFILE) 
+
+zip:
+	zip -r $(ZIPFILE) $(MAKEFILE) $(SRCS) $(HDRS) $(MODIR) $(INPFILE) 
+
+
