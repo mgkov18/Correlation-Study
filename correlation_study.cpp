@@ -15,8 +15,10 @@
 	 5/16/17 Implementing a function that calculates the distance between a neutrino and cosmic ray,
 	 		 using the formula for arc length and angle is in radians
 	 		 Also removed the gsl integration routines
-	 5/23/17 
-
+	 5/23/17 Commented out certain lines of code, deleted the (unnecessay?) 9th coumn of data in the IC86-year dat files
+			 Also deleted unnecessary columns in the dat file that contains the cosmic ray data
+	 5/26/17 deleted portions of the events_window function and attempted to load neutrino data from
+	 		 a matrix with all the neutrinos to a matrix that only contains the R.A. and declination
 	 ***** Matrix = 2-D Vector ******
 */
 
@@ -38,24 +40,44 @@ int main()
 	  const double total_neutrino_events = 898281; //total number of neutrino events
 	  const double total_cosmic_ray_events = 1233487; //total number of cosmic_ray_events
 	  const double earth_radius = 6.37e6; 
-	  const double cosmic_columns = 20; //the number of columns in the cosmic ray dat file
+	  const double cosmic_columns = 9; //the number of columns in the cosmic ray dat file
 	  const double neutrino_columns = 8; //number of columns in the neutrino dat files
   	
 	//Creating a 2-D vector that reads in cosmic ray data from a dat file
-	vector<vector<double> > cosmic_ray_events(total_cosmic_ray_events, vector<double>(22,0));
-	ifstream cosmic_ray_data("events_comp-h4a_10.00-10000.00PeV_zen37.00.dat", ios::in);
-	//checking that the dat file exists/open so that the data can be streamed as input
+	vector<vector<double> > cosmic_ray_events(total_cosmic_ray_events, vector<double>(9,0));
+	ifstream cosmic_ray_data("events_comp-h4a_10.00-10000.00PeV_zen37.00.dat", ios::in);   
+	//checking that the dat file exists/open so that the data can be streamed as input    
 	while(cosmic_ray_data.good())    
 	{
 		for(int i = 0; i < 1233487; i++) //1233487 is the number of rows in the dat file
 		{
 			for(int j = 0; j < cosmic_columns; j++) 
-			{
-	
-				cosmic_ray_data >> cosmic_ray_events[i][j]; //reading in data for 2-D vector
+			{	
+					cosmic_ray_data >> cosmic_ray_events[i][j]; //reading in data for 2-D vector
 			}
 		}
 	}
+
+    /*
+	The header information for the cosmic ray data is listed on the line below:
+	1)MJD  2)second within MJD  3) S125[VEM]  4)Zenith angle (rad)  5)Azimuthal angle (rad)
+	6)R.A. (rad)  7)Declination (rad)
+    */
+
+	cout << "Printing out values from the cosmic rays matrix: " << endl << endl;
+		//checking the cosmic ray matrix is made correctly		 
+		for(int i = 0; i < 9; i++)
+		{
+			for(int j = 0; j < 9; j++) 
+			{
+				cout << cosmic_ray_events[i][j] << "    ";
+			}
+			cout << endl;
+		}
+     
+	cout << endl << "Comic ray values have been printed out" << endl << endl;
+
+   	
 	cosmic_ray_data.close();	
 
 	//Combining all the neutrino data into one file
@@ -175,7 +197,7 @@ int main()
 	{
 		for(int i = 0; i < 105300; i++) 
 		{
-			for (int j = 0; j < 9; j++)
+			for (int j = 0; j < 8; j++)
 			{
 				IC86_2012_events_data >> IC86_2012_events[i][j]; //Adding in the elements of the vector
 			}
@@ -185,14 +207,14 @@ int main()
 
 		for(int i = 0; i < 105300; i++)
 		{
-			for(int j = 0; j < 9; j++)
+			for(int j = 0; j < 8; j++)
 			{
 				out << IC86_2012_events[i][j] << "      ";
 			}
 			out << endl;
 		}		
 
-	//declaring a 114835x9 vector, dat file contained 114835 rows
+	//declaring a 114835x8 vector, dat file contained 114835 rows
 	//this dat file contained an extra column of data, although it does not impact the calculations
 	//that I will do
 	vector<vector<double> > IC86_2013_events(114834,vector<double>(9,0));
@@ -202,7 +224,7 @@ int main()
 	{
 		for(int i = 0; i < 114834; i++)
 		{
-			for (int j = 0; j < 9; j++)
+			for (int j = 0; j < 8; j++)
 			{
 				IC86_2013_events_data >> IC86_2013_events[i][j]; //building the 2-D vector
 			}
@@ -212,7 +234,7 @@ int main()
 
 		for(int i = 0; i < 114834; i++)
 		{
-			for(int j = 0; j < 9; j++)
+			for(int j = 0; j < 8; j++)
 			{
 				out << IC86_2013_events[i][j] << "      ";
 			}
@@ -227,7 +249,7 @@ int main()
 	{
 		for(int i = 0; i < 118456; i++)
 		{
-			for (int j = 0; j < 9; j++)
+			for (int j = 0; j < 8; j++)
 			{
 				IC86_2014_events_data >> IC86_2014_events[i][j]; //building the 2-D vector
 			}
@@ -237,7 +259,7 @@ int main()
 
 		for(int i = 0; i < 118456; i++)
 		{
-			for(int j = 0; j < 9; j++)
+			for(int j = 0; j < 8; j++)
 			{
 				out << IC86_2014_events[i][j] << "      ";
 			}
@@ -252,7 +274,7 @@ int main()
 	{
 		for(int i = 0; i < 76663; i++)
 		{
-			for (int j = 0; j < 9; j++)
+			for (int j = 0; j < 8; j++)
 			{
 				IC86_2015_events_data >> IC86_2015_events[i][j]; //building the 2-D vector
 			}
@@ -262,7 +284,7 @@ int main()
 
 		for(int i = 0; i < 76663; i++)
 		{
-			for(int j = 0; j < 9; j++)
+			for(int j = 0; j < 8; j++)
 			{
 				out << IC86_2015_events[i][j] << "      ";
 			}
@@ -298,59 +320,45 @@ int main()
   cout << "All neutrino events written to neutrino_events.dat" << endl;
   out.close();
 
-    vector<vector<double> > all_neutrinos(898281,vector<double>(neutrino_columns,0));  
+    vector<vector<double> > all_neutrinos(898281,vector<double>(8,0)); 
+    vector<vector<double> > sorted_neutrinos
+  
 	ifstream all_neutrino_events("all_neutrino_events.dat", ios::in);
 	//checking the dat file is open and input can be streamed into a matrix
 	while(all_neutrino_events.good())
 	{
-		//IC40, IC59, IC79 and IC79b all have 8 columns, IC86-year all have 9
-		//IC86 has 8 columns also
-		for(int i = 0; i < 346784; i++)
+		for(int i = 0; i < 898281; i++)  //was i < 346784
 		{
 			for (int j = 0; j < neutrino_columns; j++)
 			{
-				all_neutrino_events >> all_neutrinos[i][j]; //building the vector
-			}
-		}
-		for(int i = 346784; i < 762037; i++)
-		{
-			for(int j = 0; j < 9; j++)
-			{
-				all_neutrino_events >> all_neutrinos[i][j];
-			}
-		}
-		//
-		for(int i = 762037; i < 898281; i++)
-		{
-			for(int j = 0; j < 8; j++)
-			{
-				all_neutrino_events >> all_neutrinos[i][j];
+				if(j == 2)
+				{
+					all_neutrino_events >> all_neutrinos[i][2]; //building the vector
+				}
+				else if(j == 3)
+				{
+					all_neutrino_events >> all_neutrinos[i][3];
+				}
 			}
 		}
 	}
 	all_neutrino_events.close();
 
-  	//A check to make sure that the 2-D vectors are being filled with the appropriate elements from the dat file
-	//This check can be applied to other 2-D vectors by switching which vector is looped over
-	//A 2-D vector is the same thing a matrix
-	cout << "Checking neutrino matrix (2-D vector): " << endl << endl;
-	for(int i = 762037; i < 762042; i++)
+	cout << "R.A. and declination have been sorted" << endl;
+
+	for(int i = 0; i < 5; i++)
 	{
-		for(int j = 0; j < 8; j++) //j can range from 1 to 8 
+		for(int j = 0; j < 8; j++)
 		{
-			cout << all_neutrinos[i][j] << "      ";
+			cout << all_neutrinos[i][j] << "   ";
 		}
 		cout << endl;
 	}
 
-	cout << endl << "All neutrino events are now loaded into in a matrix (2-D vector)" << endl;
+	cout << endl << "All neutrino events and R.A. and declination are now loaded into in a matrix (2-D vector)" << endl << endl;
 
-	cout << "Creating a file containing the number of Cosmic rays in a window around neutrinos" << endl;
-
-	events_window(all_neutrinos, cosmic_ray_events, earth_radius);
-
-	cout << "Data has been written to events count" << endl;
-
+	//events_window(all_neutrinos, cosmic_ray_events, earth_radius);
+	
 	return(0);
 }
 
@@ -359,34 +367,29 @@ int main()
 void events_window(vector< vector<double> > &neutrinos, vector< vector<double> > &cosmic_rays,
 					 double radius)
 {
-	//writing the R_A and Declination to a file 
-	ifstream neutrino_angle_out;
-	neutrino_angle_out.open ("all_neutrino_events.dat");
-
-	for(int i = 0; i < 898281; i++)
-	{
-		for(int j = 0; j < 8; j++)
-		{
-			if(j == 2)  //2nd element contains the Right Ascension
-				neutrino_angle_out >> neutrinos[i][j];
-			else if(j == 3)  //3rd element contains the Declination
-				neutrino_angle_out >> neutrinos[i][j];
-		}
-	}
-
 	//selecting certain elements from the dat file containing the cosmic ray data
 	ifstream cosmic_ray_angle_out;
 	cosmic_ray_angle_out.open ("events_comp-h4a_10.00-10000.00PeV_zen37.00.dat");
 
 	for(int i = 0; i < 1233487; i++)
 	{
-		for(int j = 0; j < 22; j++)
+		for(int j = 0; j < 9; j++)
 		{
-			if(j == 5)  //selects the 5th element since this contains the Right Ascension
+			if(j = 5)  //selects the 5th element since this contains the Right Ascension
 				cosmic_ray_angle_out >> cosmic_rays[i][j];
-			else if(j == 6)  //selects the 6th element since this contains the Declination
+			else if(j = 6)  //selects the 6th element since this contains the Declination
 				cosmic_ray_angle_out >> cosmic_rays[i][j];
 		}
+	}
+
+	cout << "Checking the cosmic rays matrix and selecting only certain values" << endl;
+	for(int i = 0; i < 3; i++)
+	{
+		for(int j = 0; j < 2; j++)
+		{
+			cout << cosmic_rays[i][j];
+		}
+		cout << endl;
 	}
 
 	ofstream event_count;
@@ -394,6 +397,8 @@ void events_window(vector< vector<double> > &neutrinos, vector< vector<double> >
 
 	//calculating the number of neutrinos in a band and window by narrowing down the number of 
 	//events that occur at differing angles
+
+	
 	for(int i = 0; i < 898281; i++)
 	{
 		int count = 0;
@@ -421,7 +426,7 @@ void events_window(vector< vector<double> > &neutrinos, vector< vector<double> >
 		event_count << count << endl;
 	}
 
+	
 	event_count.close();
-	neutrino_angle_out.close();
 	cosmic_ray_angle_out.close();
 }
